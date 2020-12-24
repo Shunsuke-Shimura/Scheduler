@@ -6,7 +6,7 @@
 #include <iostream>
 #include <cstdio>
 #include <string>
-#include <list>
+#include <vector>
 #include "Data.h"
 #include "ProductionLine.h"
 #include "Test.h"
@@ -16,7 +16,7 @@
 
 // 大域変数宣言
 ProductionLine lines[MAX_LINES] = { ProductionLine(1023, 200), ProductionLine(1023, 300),  ProductionLine(1023, 100),  ProductionLine(1023, 100) };
-std::list<Data> data_list; // 予定を格納する
+std::vector<Data> data_list; // 予定を格納する
 
 int main() {
 	ProductionLine_Test lines_t[4] = { ProductionLine_Test(1023, 200), ProductionLine_Test(1023, 300), ProductionLine_Test(1023, 100), ProductionLine_Test(1023, 100) };

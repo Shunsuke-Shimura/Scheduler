@@ -1,13 +1,14 @@
-#include "UI.h"
-#include "configuration.h"
-#include "Data.h"
 #include <iostream>
 #include <cstdio>
 #include <fstream>
 #include <string>
-#include <list>
+#include <vector>
+#include "UI.h"
+#include "configuration.h"
+#include "Data.h"
+
 // #define DEBUG
-extern std::list<Data> data_list;
+extern std::vector<Data> data_list;
 
 namespace UI {
 
@@ -99,7 +100,7 @@ namespace UI {
 
 	// set schedule : テンプレートファイルから予定を複数まとめて入力する
 	void set_schedule() {
-		std::ifstream reading_file("schedule.txt", std::ios::in);;
+		std::ifstream reading_file("schedule.txt", std::ios::in);
 		if (!reading_file) {
 			printf("ファイルが存在しない、もしくは開けませんでした。\n");
 			printf("\"make template\"コマンドを用いてテンプレートファイルを作成してください。\n");
@@ -139,16 +140,33 @@ namespace UI {
 
 	// list schedule : 予定のリストを番号付きで表示
 	void list_schedule() {
-
-		int num = 1; // 要素番号
-		for (std::list<Data>::iterator it = data_list.begin(); it != data_list.end(); it++) {
-			printf("%d :\t", num++);
-			Config::print_type((*it).rtn_type());
-			printf("\t");
-			Config::print_color((*it).rtn_color());
-			printf("\t%d (枚)\t納品日 / %d(日)\n", (*it).rtn_amount(), (int)(*it).rtn_deadline());
+		int size = data_list.size();
+		if (size == 0) {
+			std::cout << "追加されている予定はありません\n";
+			return;
 		}
-		printf("入力された予定は以上です。\n");
+		else {
+			// 日付によるソート処理(挿入ソート)
+			for (int i = 1; i < data_list.size(); i++) {
+				Data tmp = data_list[i];
+				int j = i - 1;
+				while (j >= 0 && data_list[j].rtn_deadline() > tmp.rtn_deadline()) {
+					data_list[j + 1] = data_list[j];
+					j--;
+				}
+				data_list[j+1] = tmp;
+			}
+			// ここから表示
+			int num = 1; // 要素番号
+			for (std::vector<Data>::iterator it = data_list.begin(); it != data_list.end(); it++) {
+				printf("%d :\t", num++);
+				Config::print_type((*it).rtn_type());
+				printf("\t");
+				Config::print_color((*it).rtn_color());
+				printf("\t%d (枚)\t納品日 / %d(日)\n", (*it).rtn_amount(), (int)(*it).rtn_deadline());
+			}
+			printf("入力された予定は以上です。\n");
+		}
 	}
 
 	// // add schedule : 予定を一つリストに加える
@@ -267,6 +285,7 @@ namespace UI {
 		printf("予定を追加しました。\n");
 	}
 
+	// コンストラクタを呼び出した後、予定を大域変数のリストに追加
 	void add_plans(int type_v, char color_v, int amount_v, char deadline_v) {
 		Data plan(type_v, color_v, amount_v, deadline_v);
 		data_list.push_back(plan);
@@ -274,8 +293,36 @@ namespace UI {
 	
 
 	// // delete schedule : リストの番号によって予定を一つ削除
-	void delete_schedule(int dlt_num) {
+	void delete_schedule() {
+		int del_num;
+		
+		std::cin.exceptions(std::ios::failbit); // cin の例外処理を有効化
+		while (true) {
+			try {
+				std::cout << "何番目の予定を削除しますか?（処理をキャンセルするには0を入力してください\n";
+				std::cout << std::endl;
+				std::cin >> del_num;
+				if (del_num == 0) {
+					printf("コマンド処理をキャンセルしました。\n");
+					return;
+				}
+				else if (del_num < 0 || del_num > data_list.size()) {
+					throw - 1;
+				}
+			}
+			catch (...) {
+				printf("不適切な入力です。もう一度入力してください。\n");
+				continue;
+			}
+			break;
+		}
+		delete_data(del_num);
+	}
 
+	// 前からdel_num番目のDataをdata_listから削除
+	void delete_data(int del_num) {
+		data_list.erase(data_list.begin() + (del_num - 1));
+		std::cout << del_num << "番目の予定を削除しました。\n";
 	}
 
 	// help : ヘルプを表示
