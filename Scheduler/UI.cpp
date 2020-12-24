@@ -6,7 +6,7 @@
 #include <fstream>
 #include <string>
 #include <list>
-#define DEBUG
+// #define DEBUG
 extern std::list<Data> data_list;
 
 namespace UI {
@@ -118,7 +118,23 @@ namespace UI {
 
 	// clear schedule : 予定をすべて削除する
 	void clear_schedule() {
-
+		std::string confirm;
+		std::cout << "本当に追加した予定をすべて削除しますか？" << std::endl;
+		while (true) {
+			std::cout << "Yes / No >>> ";
+			std::cin >> confirm;
+			if (confirm == "Yes" || confirm == "yes") {
+				data_list.clear();
+				std::cout << "予定をすべて削除しました。\n";
+				break;
+			}
+			else if (confirm == "No" || confirm == "no") {
+				break;
+			}
+			else {
+				std::cout << "入力が正しくありません\n";
+			}
+		}
 	}
 
 	// list schedule : 予定のリストを番号付きで表示
@@ -175,7 +191,7 @@ namespace UI {
 				color_tmp = -1;
 				printf("色番号を選択して入力してください。(予定の追加をキャンセルするには0を入力してください。)\n");
 				printf("新銀　　　　　　　: 1\n");
-				printf("ブラック		　: 2\n");
+				printf("ブラック　　　　　: 2\n");
 				printf("プラチナメタリック: 3\n");
 				printf("ハイシルバー　　　: 4\n");
 				printf("チョコ			　: 5\n");

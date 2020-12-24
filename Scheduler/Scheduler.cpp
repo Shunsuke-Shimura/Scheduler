@@ -37,18 +37,18 @@ int main() {
 		// list
 		else if (com == "list") {
 			// 処理
-			printf("コマンドがまだありません\n");
+			UI::list_schedule();
 			continue;
 		}
-		else if (com == "add schedule") {
+		else if (com == "add") {
 			// 処理
 			UI::add_schedule();
 			continue;
 		}
 		// clear schedule
-		else if (com == "clear schedule") {
+		else if (com == "clear") {
 			// 処理
-			printf("コマンドがまだありません\n");
+			UI::clear_schedule();
 			continue;
 		}
 		// make template
@@ -57,8 +57,9 @@ int main() {
 			UI::make_template();
 			continue;
 		}
-		else if (com == "set schedule") {
+		else if (com == "set") {
 			// 処理
+
 		}
 		// help
 		else if (com == "help") {
@@ -73,11 +74,15 @@ int main() {
 			printf("プログラムを終了します\n");
 			break;
 		}
-		
 		// コマンドにない
-		else {
+		else if (com != "") {
 			printf("エラー：コマンドに誤りがあります\n");
 			printf("使用法を見るには、\"help\"コマンドを入力してください\n");
+			printf("終了するには\"quit\"を入力してください\n");
+			continue;
+		}
+		else {
+			printf("\n");
 			continue;
 		}
 	}
