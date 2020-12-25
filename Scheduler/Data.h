@@ -1,4 +1,7 @@
-/* Data class */
+/* Data class
+* 予定データ本体を表すクラス
+* デストラクタが未完成のためメモリが無限に確保される
+*/
 #pragma once
 #include "ProductionLine.h"
 

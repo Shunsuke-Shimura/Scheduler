@@ -1,4 +1,6 @@
-/* ProductionLine class */
+/* ProductionLine class
+* 生産ラインを表すクラス
+*/
 #pragma once
 
 // include guard

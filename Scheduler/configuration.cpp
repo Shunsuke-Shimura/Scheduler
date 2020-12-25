@@ -2,7 +2,10 @@
 #include "UI.h"
 
 namespace Config {
-	// 型番号を受け取って、型の名前として表示
+	/*
+	* 型番号を受け取って、型の名前を表示する
+	* 前後に改行文字は出力しない
+	*/
 	void print_type(int type) {
 		switch (type) {
 		case 0:
@@ -33,7 +36,10 @@ namespace Config {
 		return;
 	}
 	
-	// 色番号を受け取って、色の名前として表示
+	/*
+	* 色番号を受け取って、型の名前を表示する
+	* 前後に改行文字は出力しない
+	*/
 	void print_color(char color) {
 		switch (color) {
 		case 0:

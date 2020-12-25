@@ -12,7 +12,11 @@ extern std::vector<Data> data_list;
 
 namespace UI {
 
-	// エラー出力
+	/* 
+	* そのままプログラムを続行できない致命的なエラーを処理する
+	* msgを引数として、"致命的なエラー："という定型文の後にmsgを出力して
+	* 全体のプログラムを異常終了する。
+	*/
 	void fatal(std::string msg) {
 		std::string error_msg = "致命的なエラー : ";
 		error_msg += msg;
@@ -22,7 +26,10 @@ namespace UI {
 	}
 
 
-	// print schedule
+	/* 
+	* スケジュールをカレンダー形式で表示する関数
+	* 生産ラインの数を n として引数に渡す
+	*/
 	void print_schedule(ProductionLine lines[], int n) {
 		// カレンダーを表示
 		// ==================================================================================
@@ -76,7 +83,10 @@ namespace UI {
 		printf("\n");
 	}
 
-	// make template : 予定を入力するためのテキストファイルのテンプレートをつくる
+	/* 
+	* 予定を入力するためのテキストファイルのテンプレートをつくる
+	* テキストファイルのテンプレートには、予定を入力するための形式を示す
+	*/
 	void make_template() {
 		std::ofstream fout("schedule.txt", std::ios::trunc);
 		if (!fout) fatal("テンプレートファイルを開けませんでした。\n");
@@ -98,7 +108,10 @@ namespace UI {
 		}
 	}
 
-	// set schedule : テンプレートファイルから予定を複数まとめて入力する
+	/*
+	* テンプレートファイルから予定を複数まとめて受け取る
+	* ************************ 未完成 ******************
+	*/
 	void set_schedule() {
 		std::ifstream reading_file("schedule.txt", std::ios::in);
 		if (!reading_file) {
@@ -112,12 +125,17 @@ namespace UI {
 				int type_v, amount_v, color_tmp, deadline_tmp;
 				char color_v, deadline_v;
 				// getlineで入力
+
+
 			}
 			printf("テンプレートファイルから予定をすべて読み込みました。\n");
 		}
 	}
 
-	// clear schedule : 予定をすべて削除する
+	/*
+	* "clear"コマンド処理の関数
+	* 本当に予定を削除するかを確認してから予定をすべて削除する
+	*/
 	void clear_schedule() {
 		std::string confirm;
 		std::cout << "本当に追加した予定をすべて削除しますか？" << std::endl;
@@ -138,7 +156,10 @@ namespace UI {
 		}
 	}
 
-	// list schedule : 予定のリストを番号付きで表示
+	/*
+	* "list"コマンドの処理をする
+	* 予定のリストを日付順に挿入ソートした後に、そのリストを番号付きで表示する
+	*/
 	void list_schedule() {
 		int size = data_list.size();
 		if (size == 0) {
@@ -169,7 +190,10 @@ namespace UI {
 		}
 	}
 
-	// // add schedule : 予定を一つリストに加える
+	/*
+	* "add"コマンドの処理をする
+	* 型や色などを数字の入力によって選択して予定をひとつリストに加える
+	*/
 	void add_schedule() {
 		int type_v, amount_v, color_tmp, deadline_tmp;
 		char color_v, deadline_v;
@@ -285,14 +309,19 @@ namespace UI {
 		printf("予定を追加しました。\n");
 	}
 
-	// コンストラクタを呼び出した後、予定を大域変数のリストに追加
+	/*
+	* 実際にDataクラスのインスタンスを作成した後に、
+	* 予定のリストに追加する
+	*/
 	void add_plans(int type_v, char color_v, int amount_v, char deadline_v) {
 		Data plan(type_v, color_v, amount_v, deadline_v);
 		data_list.push_back(plan);
 	}
 	
-
-	// // delete schedule : リストの番号によって予定を一つ削除
+	/*
+	* "delete"コマンドの処理をする
+	* "list"コマンドで横に示した予定番号から予定をひとつ選んで削除する
+	*/
 	void delete_schedule() {
 		int del_num;
 		
@@ -319,12 +348,19 @@ namespace UI {
 		delete_data(del_num);
 	}
 
-	// 前からdel_num番目のDataをdata_listから削除
+	/*
+	* 実際に予定のリストからdel_num番目のものを削除する
+	*/
 	void delete_data(int del_num) {
 		data_list.erase(data_list.begin() + (del_num - 1));
 		std::cout << del_num << "番目の予定を削除しました。\n";
 	}
 
+	/*
+	* "help"コマンドの処理をする関数
+	* 各コマンドを番号で表し、そのhelp_numの番号によって
+	* そのコマンドの使用法を表示する
+	*/
 	// help : ヘルプを表示
 	void print_help(int help_num) {
 

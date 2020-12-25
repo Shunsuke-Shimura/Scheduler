@@ -12,12 +12,21 @@
 #include "Test.h"
 #include "UI.h"
 #include "configuration.h"
-#define DEBUG
+// #define DEBUG
 
-// 大域変数宣言
+/* 大域変数宣言 */
+// linesという配列として生産ライン自体を管理する
+// MAX_LINESは生産ラインの数で、"ProductionLine.h"フォルダに
+// マクロとして定義される
 ProductionLine lines[MAX_LINES] = { ProductionLine(1023, 200), ProductionLine(1023, 300),  ProductionLine(1023, 100),  ProductionLine(1023, 100) };
-std::vector<Data> data_list; // 予定を格納する
 
+// data_listは追加された予定を保持する
+std::vector<Data> data_list;
+
+
+/*
+* メイン関数
+*/
 int main() {
 	ProductionLine_Test lines_t[4] = { ProductionLine_Test(1023, 200), ProductionLine_Test(1023, 300), ProductionLine_Test(1023, 100), ProductionLine_Test(1023, 100) };
 	std::string com;
