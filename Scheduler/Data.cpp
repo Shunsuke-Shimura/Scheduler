@@ -1,4 +1,8 @@
+#include <algorithm>
+#include "ProductionLine.h"
 #include "Data.h"
+#include "UI.h"
+#include "configuration.h"
 extern ProductionLine lines[MAX_LINES];
 
 
@@ -20,13 +24,45 @@ Data::Data(int type_v, char color_v, int amount_v, char deadline_v) {
 	for (int i = 0; i < MAX_LINES; i++) {
 		int tmp = 0;
 		tmp = lines[i].is_producible(type);
-		if (tmp != 0) producible_flag += (1 << i);
+		if (tmp == 1) producible_flag += (1 << i);
+	}
+}
+
+
+
+/*
+* producible_flag ‚©‚çÅ‚à—\’è‚Ì­‚È‚¢ƒ‰ƒCƒ“‚ð‘I‚ñ‚ÅA
+* —\’è‚ð‚»‚Ìƒ‰ƒCƒ“‚Ìcalendar‚É‰Á‚¦‚é
+* ³í‚É—\’è‚ð’Ç‰Á‚·‚é‚±‚Æ‚ª‚Å‚«‚È‚¯‚ê‚ÎFUNC_ERROR‚ð•Ô‚·
+*/
+int Data::schedule() {
+	int line_num = choose_line();
+	if (line_num == FUNC_ERROR) {
+		return FUNC_ERROR;
+	}
+	else {
+		lines[line_num].put_on_calendar(id, type, color, amount);
+		return 1;
 	}
 }
 
 /*
-* 
+* producible_flag ‚©‚çÅ‚à—\’è‚Ì­‚È‚¢ƒ‰ƒCƒ“‚ð‘I‚Ô
+* ”[•i“ú‚È‚Ç‚ÌðŒ‚É‡‚í‚È‚¢ê‡‚ÍFUNC_ERROR‚ð•Ô‚·("UI.h")
 */
-int Data::put_on_calender(ProductionLine* line) {
-	return 0;
+int Data::choose_line() {
+	int min_date = 0;
+	int line_num = -1;
+	for (int i = 0; i <= MAX_LINES; i++) {
+		if (producible_flag & (1 << i)) {
+			int date;
+			date = (int)lines[i].rtn_date() + (amount / (int)lines[i].rtn_max_production()) + 1;
+			if (date < min_date) {
+				min_date = date;
+				line_num = i;
+			}
+		}
+	}
+	if (line_num == -1 || min_date > deadline) return FUNC_ERROR;
+	else return line_num;
 }

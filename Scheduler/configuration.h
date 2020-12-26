@@ -4,7 +4,8 @@
 * 型番号、色番号の設定の変更の際は、UIファイルのmake_template関数のテンプレート文も変更すること。
 */
 #pragma once
-
+const int MAX_TYPE = 6; // 最大でも32以下にすること
+const int MAX_COLOR = 8; // 最大でも8以下にすること
 
 namespace Config {
 	/* 型
@@ -14,8 +15,8 @@ namespace Config {
 	自在万十: 4
 	紐袖	: 5
 	並袖	: 6
-*/
-
+	*/
+	
 	void print_type(int type); // 型番号を受け取って、型の名前として表示
 
 	/* 色

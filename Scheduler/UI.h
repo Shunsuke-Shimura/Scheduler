@@ -8,20 +8,22 @@
 #include <string>
 #include "ProductionLine.h"
 #include "test.h"
-#define DEBUG
-
+// #define DEBUG
+const int FUNC_ERROR = -1;
 
 namespace UI {
 	void fatal(std::string msg); // 致命的なエラー処理関数、std::stringのメッセージを引数として、エラー文の後にそのメッセージを表示してすべてのプログラムを終了する。
 	void print_schedule(ProductionLine lines[], int n);
+	void sort_data_list();
 	void make_template();
 	void set_schedule(); // 複数の予定をテンプレートファイルからまとめて入力
 	void clear_schedule();
 	void list_schedule();
 	void add_schedule();
 	void add_plans(int type_v, char color_v, int amount_v, char deadline_v);
-	void delete_schedule(int); // 渡された番号の予定を削除
-	void print_help(int); // 渡されたコマンドのヘルプを表示
+	void delete_schedule();
+	void delete_data(int);
+	void print_help();
 
 }
 

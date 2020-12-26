@@ -14,11 +14,18 @@
 #include "configuration.h"
 // #define DEBUG
 
+/* 各ラインで生産できる種類（数字と種類の対応はconfiguration.h） */
+static const int LINE0_TYPES = (1 << 1) + (1 << 2);
+static const int LINE1_TYPES = (1 << 1) + (1 << 2);
+static const int LINE2_TYPES = (1 << 5) + (1 << 6);
+static const int LINE3_TYPES = (1 << 5) + (1 << 6);
+
+
 /* 大域変数宣言 */
 // linesという配列として生産ライン自体を管理する
 // MAX_LINESは生産ラインの数で、"ProductionLine.h"フォルダに
 // マクロとして定義される
-ProductionLine lines[MAX_LINES] = { ProductionLine(1023, 200), ProductionLine(1023, 300),  ProductionLine(1023, 100),  ProductionLine(1023, 100) };
+ProductionLine lines[MAX_LINES] = { ProductionLine(LINE0_TYPES, 200), ProductionLine(LINE1_TYPES, 300),  ProductionLine(LINE2_TYPES, 100),  ProductionLine(LINE3_TYPES, 100) };
 
 // data_listは追加された予定を保持する
 std::vector<Data> data_list;
@@ -34,6 +41,7 @@ int main() {
 
 	printf("*****    起動しました   *****\n");
 	printf("コマンドを入力してください\n");
+	printf("コマンドの使用法を見るには、\"help\"コマンドを入力してください\n");
 
 	while (true) {
 		printf(">>> ");
@@ -73,7 +81,7 @@ int main() {
 		// help
 		else if (com == "help") {
 			// 処理
-			printf("コマンドがまだありません\n");
+			UI::print_help();
 			continue;
 		}
 		// quit
@@ -84,14 +92,10 @@ int main() {
 			break;
 		}
 		// コマンドにない
-		else if (com != "") {
+		else {
 			printf("エラー：コマンドに誤りがあります\n");
 			printf("使用法を見るには、\"help\"コマンドを入力してください\n");
 			printf("終了するには\"quit\"を入力してください\n");
-			continue;
-		}
-		else {
-			printf("\n");
 			continue;
 		}
 	}

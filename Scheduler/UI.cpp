@@ -27,10 +27,19 @@ namespace UI {
 
 
 	/* 
-	* スケジュールをカレンダー形式で表示する関数
+	* リストを日付順にソートしてから生産ラインのcalendarに組み込んで、
+	* スケジュールをカレンダー形式で表示する
 	* 生産ラインの数を n として引数に渡す
 	*/
 	void print_schedule(ProductionLine lines[], int n) {
+		// リストを日付順にソート
+		sort_data_list();
+
+		// リストから一つずつ予定をラインのcalendarに組み込んでいく
+		for (std::vector<Data>::iterator it = data_list.begin(); it != data_list.end(); it++) (*it).schedule();
+
+
+
 		// カレンダーを表示
 		// ==================================================================================
 		for (int i = 0; i < 100; i++) printf("=");
@@ -42,7 +51,7 @@ namespace UI {
 
 			printf(" %d\t||\t", date);
 
-			// line1
+			// LINE0
 			lines[0].get_data(date, type, color, amount);
 			printf("line1:\t");
 			Config::print_type(type);
@@ -50,7 +59,7 @@ namespace UI {
 			Config::print_color(color);
 			printf("/%d個\t\t\t", amount);
 
-			// line2
+			// LINE1
 			lines[1].get_data(date, type, color, amount);
 			printf("line2:\t");
 			Config::print_type(type);
@@ -60,7 +69,7 @@ namespace UI {
 
 			printf("\n\t||\t");
 
-			// line3
+			// LINE2
 			lines[2].get_data(date, type, color, amount);
 			printf("line3:\t");
 			Config::print_type(type);
@@ -68,7 +77,7 @@ namespace UI {
 			Config::print_color(color);
 			printf("/%d個\t\t\t", amount);
 
-			// line4
+			// LINE3
 			lines[3].get_data(date, type, color, amount);
 			printf("line4:\t");
 			Config::print_type(type);
@@ -83,12 +92,28 @@ namespace UI {
 		printf("\n");
 	}
 
+	/*
+	* data_listを日付順にソートする（挿入ソート）
+	*/
+	void sort_data_list() {
+		for (int i = 1; i < data_list.size(); i++) {
+			Data tmp = data_list[i];
+			int j = i - 1;
+			while (j >= 0 && data_list[j].rtn_deadline() > tmp.rtn_deadline()) {
+				data_list[j + 1] = data_list[j];
+				j--;
+			}
+			data_list[j + 1] = tmp;
+		}
+	}
+	
+
 	/* 
 	* 予定を入力するためのテキストファイルのテンプレートをつくる
 	* テキストファイルのテンプレートには、予定を入力するための形式を示す
 	*/
 	void make_template() {
-		std::ofstream fout("schedule.txt", std::ios::trunc);
+		std::ofstream fout("template.txt", std::ios::trunc);
 		if (!fout) fatal("テンプレートファイルを開けませんでした。\n");
 		else {
 			fout << "# これは予定を複数同時に入力するためのテンプレートファイルです。テンプレート説明文の次の行から、１行に予定を一つずつ入力してください。\n";
@@ -106,6 +131,13 @@ namespace UI {
 			fout << "#  			   　, オレンジ			: 8";
 			printf("テンプレートファイルを作成しました。ファイル名は\"schedule.txt\"です。\n");
 		}
+	}
+
+	/*
+	* data_listの内容を"template.txt"に記録する
+	*/
+	void record_in_template() {
+
 	}
 
 	/*
@@ -167,16 +199,9 @@ namespace UI {
 			return;
 		}
 		else {
-			// 日付によるソート処理(挿入ソート)
-			for (int i = 1; i < data_list.size(); i++) {
-				Data tmp = data_list[i];
-				int j = i - 1;
-				while (j >= 0 && data_list[j].rtn_deadline() > tmp.rtn_deadline()) {
-					data_list[j + 1] = data_list[j];
-					j--;
-				}
-				data_list[j+1] = tmp;
-			}
+			// 日付によるソート処理
+			sort_data_list();
+			
 			// ここから表示
 			int num = 1; // 要素番号
 			for (std::vector<Data>::iterator it = data_list.begin(); it != data_list.end(); it++) {
@@ -357,13 +382,22 @@ namespace UI {
 	}
 
 	/*
-	* "help"コマンドの処理をする関数
+	* "help"コマンドの処理をする
 	* 各コマンドを番号で表し、そのhelp_numの番号によって
 	* そのコマンドの使用法を表示する
 	*/
-	// help : ヘルプを表示
-	void print_help(int help_num) {
-
+	void print_help() {
+		std::cout << "< 各コマンドの動作 >\n";
+		std::cout << "\"print\" : 登録した予定をカレンダー形式で表示\n";
+		std::cout << "\"list\" : 登録した予定を確認する\n";
+		std::cout << "\"delete\" : listコマンドで表示した予定に対して、\n";
+			std::cout << "\t\t指定した番号の予定を削除する\n";
+		std::cout << "\"add\" : 予定を追加する\n";
+		std::cout << "\"make template\" : 予定を複数同時に登録するための\n";
+			std::cout << "\t\tテンプレートファイルを作成する\n";
+		std::cout << "\"set\" : テンプレートファイルから予定を登録する\n";
+		std::cout << "\"clear\" : 登録した予定をすべて削除する\n";
+		std::cout << "\"quit\" : このプログラムを終了する\n";
 	}
 }
 
