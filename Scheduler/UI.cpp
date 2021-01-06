@@ -32,7 +32,7 @@ namespace UI {
 	* スケジュールをカレンダー形式で表示する
 	* 生産ラインの数を n として引数に渡す
 	*/
-	void print_schedule(ProductionLine lines[]) {
+	void print_schedule(ProductionLine lines[], int n) {
 		// リストを日付順にソート
 		sort_data_list();
 
@@ -42,7 +42,9 @@ namespace UI {
 		// リストから一つずつ予定をラインのcalendarに組み込んでいく
 		for (std::vector<Data>::iterator it = data_list.begin(); it != data_list.end(); it++) (*it).schedule();
 
-		
+		if (n != 4) {
+			fatal("print_schedule関数内でラインの数が一致しません。");
+		}
 
 		// カレンダーを表示
 		// ==================================================================================

@@ -3,6 +3,8 @@
 */
 #pragma once
 
+const int CHOOSE_LINE_FUNC_ERROR = -1;
+
 /* 納品物ごとの予定データクラス */
 class Data {
 private:

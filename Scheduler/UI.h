@@ -13,7 +13,7 @@ const int FUNC_ERROR = -1;
 
 namespace UI {
 	void fatal(std::string msg); // 致命的なエラー処理関数、std::stringのメッセージを引数として、エラー文の後にそのメッセージを表示してすべてのプログラムを終了する。
-	void print_schedule(ProductionLine lines[]);
+	void print_schedule(ProductionLine lines[], int n);
 	void init_lines();
 	void sort_data_list();
 	void make_template();

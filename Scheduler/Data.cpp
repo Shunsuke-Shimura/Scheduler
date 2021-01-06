@@ -44,12 +44,12 @@ Data::Data(int type_v, char color_v, int amount_v, int deadline_v) {
 /*
 * producible_flag から最も予定の少ないラインを選んで、
 * 予定をそのラインのcalendarに加える
-* 正常に予定を追加することができなければFUNC_ERRORを返す
+* 正常に予定を追加することができなければfatal("UI.cpp")で終了
 */
 int Data::schedule() {
 	int line_num = choose_line();
 	if (line_num == FUNC_ERROR) {
-		return FUNC_ERROR;
+		UI::fatal("scheduleメンバ関数内で納品日の条件に合いませんでした。");
 	}
 	else {
 		lines[line_num].put_on_calendar(id, type, color, amount);
@@ -59,22 +59,24 @@ int Data::schedule() {
 
 /*
 * producible_flag から最も予定の少ないラインを選ぶ
-* 納品日などの条件に合わない場合はFUNC_ERRORを返す("UI.h")
+* 納品日などの条件に合わない場合はCHOOSE_LINE_FUNC_ERRORを返す("UI.h")
 */
 int Data::choose_line() {
-	int min_date = 0;
+	int min_date = 50; // 確実に納品日を超過
 	int line_num = -1;
-	for (int i = 0; i <= MAX_LINES; i++) {
+	for (int i = 0; i < MAX_LINES; i++) {
 		if (producible_flag & (1 << i)) {
 			int date;
-			date = (int)lines[i].rtn_date() + (amount / (int)lines[i].rtn_max_production()) + 1;
+			int filled_date = lines[i].rtn_date();
+			int max_production = lines[i].rtn_max_production();
+			date = filled_date + (amount + max_production - 1) / max_production; // 生産にかかる日数を切り上げで
 			if (date < min_date) {
 				min_date = date;
 				line_num = i;
 			}
 		}
 	}
-	if (line_num == -1 || min_date > deadline) return FUNC_ERROR;
+	if (line_num == -1 || min_date > deadline) return CHOOSE_LINE_FUNC_ERROR;
 	else return line_num;
 }
 
