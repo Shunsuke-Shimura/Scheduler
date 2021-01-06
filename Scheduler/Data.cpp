@@ -10,6 +10,8 @@
 extern ProductionLine lines[MAX_LINES];
 #endif
 
+int Data::sum = 0; // Ã“Iƒƒ“ƒo•Ï”‚Ì’è‹`
+
 #ifdef DBG_DATA
 #include <iostream>
 #endif

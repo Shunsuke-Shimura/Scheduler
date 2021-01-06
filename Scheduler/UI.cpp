@@ -36,11 +36,13 @@ namespace UI {
 		// リストを日付順にソート
 		sort_data_list();
 
+		// lines[]の初期化
+		init_lines();
+
 		// リストから一つずつ予定をラインのcalendarに組み込んでいく
 		for (std::vector<Data>::iterator it = data_list.begin(); it != data_list.end(); it++) (*it).schedule();
 
-		// lines[]の初期化
-		init_lines();
+		
 
 		// カレンダーを表示
 		// ==================================================================================
@@ -177,7 +179,7 @@ namespace UI {
 	}
 
 	/*
-	* "clear"コマンド処理の関数
+	* "clear"コマンドの処理をする
 	* 本当に予定を削除するかを確認してから予定をすべて削除する
 	*/
 	void clear_schedule() {

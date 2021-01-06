@@ -26,7 +26,6 @@ static const int LINE3_TYPES = (1 << 5) + (1 << 6);
 
 
 /* 大域変数宣言 */
-#ifndef DEBUG
 // linesという配列として生産ライン自体を管理する
 // MAX_LINESは生産ラインの数で、"ProductionLine.h"フォルダに
 // マクロとして定義される
@@ -34,7 +33,6 @@ ProductionLine lines[MAX_LINES] = { ProductionLine(LINE0_TYPES, 200), Production
 
 // data_listは追加された予定を保持する
 std::vector<Data> data_list;
-#endif
 
 /*
 * メイン関数

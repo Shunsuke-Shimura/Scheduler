@@ -22,5 +22,3 @@ public:
 	int rtn_deadline() { return deadline; };
 	int rtn_amount() { return amount; };
 };
-
-int Data::sum = 0;

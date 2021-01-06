@@ -5,7 +5,7 @@
 */
 #pragma once
 const int MAX_TYPE = 6; // ç≈ëÂÇ≈Ç‡32à»â∫Ç…Ç∑ÇÈÇ±Ç∆
-const int MAX_COLOR = 8; // ç≈ëÂÇ≈Ç‡8à»â∫Ç…Ç∑ÇÈÇ±Ç∆
+const int MAX_COLOR = 8; // ç≈ëÂÇ≈Ç‡125à»â∫Ç…Ç∑ÇÈÇ±Ç∆
 
 namespace Config {
 	/* å^
