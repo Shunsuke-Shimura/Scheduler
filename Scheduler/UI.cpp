@@ -9,6 +9,7 @@
 
 // #define DEBUG
 extern std::vector<Data> data_list;
+extern ProductionLine lines[MAX_LINES];
 
 namespace UI {
 
@@ -31,14 +32,15 @@ namespace UI {
 	* スケジュールをカレンダー形式で表示する
 	* 生産ラインの数を n として引数に渡す
 	*/
-	void print_schedule(ProductionLine lines[], int n) {
+	void print_schedule(ProductionLine lines[]) {
 		// リストを日付順にソート
 		sort_data_list();
 
 		// リストから一つずつ予定をラインのcalendarに組み込んでいく
 		for (std::vector<Data>::iterator it = data_list.begin(); it != data_list.end(); it++) (*it).schedule();
 
-
+		// lines[]の初期化
+		init_lines();
 
 		// カレンダーを表示
 		// ==================================================================================
@@ -90,6 +92,16 @@ namespace UI {
 		// ==================================================================================
 		for (int i = 0; i < 100; i++) printf("=");
 		printf("\n");
+	}
+
+
+	/*
+	* lines[]のcalendar, filled_daysを初期化する
+	*/
+	void init_lines() {
+		for (int i = 0; i < MAX_LINES; i++) {
+			lines[i].init();
+		}
 	}
 
 	/*

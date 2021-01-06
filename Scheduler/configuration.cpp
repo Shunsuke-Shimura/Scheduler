@@ -1,5 +1,8 @@
 #include "configuration.h"
+
+#ifndef DBG_CONFIGURATION
 #include "UI.h"
+#endif
 
 namespace Config {
 	/*
@@ -78,3 +81,7 @@ namespace Config {
 	
 
 }
+
+#ifdef DBG_CONFIGURATION
+// デバッグ処理
+#endif

@@ -1,23 +1,21 @@
 #include "ProductionLine.h"
+// #define DBG_PRODUCTIONLINE
+
+
+#ifndef DBG_PRODUCTIONLINE
 #include "configuration.h"
+#endif
 
 /*
 * コンストラクタ
 * calender[]を、Plan構造体のidメンバ変数が-1のもので
 * 初期化する
 */
-ProductionLine::ProductionLine(int ptype, int maxp) {
-	Plan none;
-	none.id = -1;
-	
-	// Plan.id が-1のもので初期化する
-	// これはその場所に予定が入っていないことを表す
-	for (int i = 0; i <= 31; i++) {
-		calendar[i] = none;
-	}
+ProductionLine::ProductionLine(int ptype_flag, int maxp) {
 
-	filled_date = 0; // 予定が入っていない状態で初期化
-	producible_type = ptype;
+	this->init();
+	
+	producible_type_flag = ptype_flag;
 	max_production = maxp;
 }
 
@@ -29,7 +27,7 @@ ProductionLine::ProductionLine(int ptype, int maxp) {
 * もしdateの場所の予定が空であればすべてに0を代入する
 */
 void ProductionLine::get_data(int date, int& type, char& color, int& amount) {
-	if (calendar[date].id != -1) {
+	if (calendar[date].id != CALENDAR_NIL_ID) {
 		type = calendar[date].type;
 		color = calendar[date].color;
 		amount = calendar[date].amount;
@@ -46,7 +44,7 @@ void ProductionLine::get_data(int date, int& type, char& color, int& amount) {
 */
 int ProductionLine::is_producible(int type) {
 	if (type < 1 || type > MAX_TYPE) return 0;
-	if (producible_type & (1 << type)) return 1;
+	if (producible_type_flag & (1 << type)) return 1;
 	else return 0;
 }
 
@@ -64,3 +62,29 @@ void ProductionLine::put_on_calendar(int id, int type, char color, int amount) {
 	}
 	filled_date += days;
 }
+
+/*
+* calendar, filled_dateを初期化する
+*/
+void ProductionLine::init() {
+	// Plan.id をCALENDAR_NIL_IDで初期化する
+	// これはその場所に予定が入っていないことを表す
+	for (int i = 0; i <= 31; i++) {
+		calendar[i].id = CALENDAR_NIL_ID;
+	}
+
+	filled_date = 0; // 予定が入っていない状態で初期化
+}
+
+
+#ifdef DBG_PRODUCTIONLINE
+// デバッグ処理
+#include <iostream>
+using namespace std;
+static const int line0 = (1 << 6) + (1 << 4);
+static const int line1 = (1 << 3) + (1 << 1);
+int main() {
+	ProductionLine lines[] = { (line0, 200), (line1, 300) };
+
+}
+#endif

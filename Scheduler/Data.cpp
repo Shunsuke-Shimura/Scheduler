@@ -1,17 +1,26 @@
 #include <algorithm>
-#include "ProductionLine.h"
 #include "Data.h"
+// #define DBG_DATA
+
+#ifndef DBG_DATA
+#include "ProductionLine.h"
 #include "UI.h"
 #include "configuration.h"
-extern ProductionLine lines[MAX_LINES];
 
+extern ProductionLine lines[MAX_LINES];
+#endif
+
+#ifdef DBG_DATA
+#include <iostream>
+#endif
 
 /* コンストラクタ
 * 型番号、色番号、数量、納品日を受け取ってメンバ変数に代入する
+* 静的メンバ変数によってidをつけていく
 * producible_flagを設定する
 */
-Data::Data(int type_v, char color_v, int amount_v, char deadline_v) {
-	id = 1; // 製作途中のためとりあえずの値として1を代入している
+Data::Data(int type_v, char color_v, int amount_v, int deadline_v) {
+	id = ++sum;
 	type = type_v;
 	color = color_v;
 	amount = amount_v;
@@ -66,3 +75,21 @@ int Data::choose_line() {
 	if (line_num == -1 || min_date > deadline) return FUNC_ERROR;
 	else return line_num;
 }
+
+#ifdef DBG_DATA
+// デバッグ処理
+// ユニットテスト
+using namespace std;
+
+int main() {
+	Data data_ary[] = { (1, 8, 600, 24), 
+						(2, 7, 400, 20), 
+						(3, 6, 300, 15), 
+						(4, 1, 200, 1),
+						(5, 3, 1000, 31)};
+	for (int i = 0; i < 5, i++) {
+		cout << data_ary[i].rtn_type() << " " << (int)data_ary[i].rtn_color() << " " << (int)data_ary[i].rtn_deadline() << " " << (int)data_ary[i].rtn_amount() << endl;
+	}
+
+}
+#endif

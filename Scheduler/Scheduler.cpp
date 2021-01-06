@@ -7,12 +7,16 @@
 #include <cstdio>
 #include <string>
 #include <vector>
+// #define DEBUG
+
+#ifndef DEBUG
 #include "Data.h"
 #include "ProductionLine.h"
 #include "Test.h"
 #include "UI.h"
 #include "configuration.h"
-// #define DEBUG
+#endif
+
 
 /* 各ラインで生産できる種類（数字と種類の対応はconfiguration.h） */
 static const int LINE0_TYPES = (1 << 1) + (1 << 2);
@@ -22,6 +26,7 @@ static const int LINE3_TYPES = (1 << 5) + (1 << 6);
 
 
 /* 大域変数宣言 */
+#ifndef DEBUG
 // linesという配列として生産ライン自体を管理する
 // MAX_LINESは生産ラインの数で、"ProductionLine.h"フォルダに
 // マクロとして定義される
@@ -29,7 +34,7 @@ ProductionLine lines[MAX_LINES] = { ProductionLine(LINE0_TYPES, 200), Production
 
 // data_listは追加された予定を保持する
 std::vector<Data> data_list;
-
+#endif
 
 /*
 * メイン関数
@@ -106,3 +111,6 @@ int main() {
 	return 0;
 }
 
+#ifdef DEBUG
+// デバッグ処理
+#endif
