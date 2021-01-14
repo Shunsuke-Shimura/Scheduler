@@ -173,12 +173,15 @@ namespace UI {
 				int type_v, amount_v, color_tmp, deadline_tmp;
 				char color_v, deadline_v;
 				// getlineで入力
-
+				std::getline(reading_file, reading_file_buffer);
+				
 
 			}
 			printf("テンプレートファイルから予定をすべて読み込みました。\n");
 		}
 	}
+
+	
 
 	/*
 	* "clear"コマンドの処理をする

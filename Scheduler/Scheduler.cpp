@@ -38,7 +38,7 @@ ProductionLine lines[MAX_LINES] = { ProductionLine(LINE0_TYPES, LINE0_MAXPRODUCT
 // data_listは追加された予定を保持する
 std::vector<Data> data_list;
 
-// テスト用line
+// テスト用ProductionLine
 ProductionLine_Test lines_t[4] = { ProductionLine_Test(1023, 200), ProductionLine_Test(1023, 300), ProductionLine_Test(1023, 100), ProductionLine_Test(1023, 100) };
 
 
