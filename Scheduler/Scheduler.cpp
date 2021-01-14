@@ -86,7 +86,8 @@ int main() {
 		}
 		else if (com == "set") {
 			// 処理
-
+			UI::set_schedule();
+			continue;
 		}
 		// help
 		else if (com == "help") {

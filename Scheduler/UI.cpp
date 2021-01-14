@@ -12,6 +12,10 @@ extern std::vector<Data> data_list;
 extern ProductionLine lines[MAX_LINES];
 
 namespace UI {
+	// ファイル内リンク用プロトタイプ宣言
+	static bool is_appropriate(int, char, int, char);
+	static std::vector<int> buffer_to_array(std::string);
+	
 
 	/* 
 	* そのままプログラムを続行できない致命的なエラーを処理する
@@ -129,24 +133,19 @@ namespace UI {
 	* テキストファイルのテンプレートには、予定を入力するための形式を示す
 	*/
 	void make_template() {
+		std::ifstream reading_file(".temp_conf.txt", std::ios::in);
+		if (!reading_file) {
+			fatal("テンプレート初期化用ファイルが紛失しています。");
+		}
 		std::ofstream fout("template.txt", std::ios::trunc);
 		if (!fout) fatal("テンプレートファイルを開けませんでした。\n");
-		else {
-			fout << "# これは予定を複数同時に入力するためのテンプレートファイルです。テンプレート説明文の次の行から、１行に予定を一つずつ入力してください。\n";
-			fout << "# \"・#などの記号は入力しないでください。\n";
-			fout << "# 予定の入力は次のフォーマットに従ってください。また、必ず半角文字を用いてください。\n";
-			fout << "# \"<型(半角数字)> <色(半角数字)> <納品量> <納品の日付>\"\n";
-			fout << "# また、型名、色については以下の番号で入力してください。\n";
-			fout << "# ・雪止め : 1　　　,新銀				: 1";
-			fout << "# ・万十	: 2　　　,ブラック			: 2";
-			fout << "# ・安定万十 : 3　　,プラチナメタリック: 3";
-			fout << "# ・自在万十 : 4　　,ハイシルバー		: 4";
-			fout << "# ・紐袖 : 5　　　　,チョコ			: 5";
-			fout << "# ・並袖 : 6　　　　,青銅				: 6";
-			fout << "#				   　,青緑				: 7";
-			fout << "#  			   　, オレンジ			: 8";
-			printf("テンプレートファイルを作成しました。ファイル名は\"schedule.txt\"です。\n");
+
+		std::string reading_buffer;
+		while (!reading_file.eof()) {
+			std::getline(reading_file, reading_buffer);
+			fout << reading_buffer << std::endl;
 		}
+		printf("テンプレートファイルを作成しました。ファイル名は\"template.txt\"です。\n");
 	}
 
 	/*
@@ -158,30 +157,86 @@ namespace UI {
 
 	/*
 	* テンプレートファイルから予定を複数まとめて受け取る
-	* ************************ 未完成 ******************
 	*/
 	void set_schedule() {
-		std::ifstream reading_file("schedule.txt", std::ios::in);
+		std::ifstream reading_file("template.txt", std::ios::in);
 		if (!reading_file) {
 			printf("ファイルが存在しない、もしくは開けませんでした。\n");
 			printf("\"make template\"コマンドを用いてテンプレートファイルを作成してください。\n");
 		}
-		else {
-			std::string reading_file_buffer;
-			printf("\"schedule.txt\"を読み込んでいます...\n");
-			while (!reading_file.eof()) {
-				int type_v, amount_v, color_tmp, deadline_tmp;
-				char color_v, deadline_v;
-				// getlineで入力
-				std::getline(reading_file, reading_file_buffer);
-				
-
+		std::string reading_file_buffer;
+		printf("\"template.txt\"を読み込んでいます...\n");
+		std::vector<std::string> fail_str; // 読み込みに失敗した行を保存
+		while (!reading_file.eof()) {
+			int type_v, amount_v;
+			char color_v, deadline_v;
+			// getlineで入力
+			std::getline(reading_file, reading_file_buffer);
+			if (reading_file_buffer[0] == '#' || reading_file_buffer[0] == '\0' || reading_file_buffer[0] == '\n') continue; // コメント行を飛ばす処理
+			std::vector<int> vec = buffer_to_array(reading_file_buffer);
+			if (vec.size() != 4) {
+				fail_str.push_back(reading_file_buffer);
 			}
+			else {
+				type_v = vec[0];
+				color_v = (char)vec[1];
+				amount_v = vec[2];
+				deadline_v = (char)vec[3];
+				if (!is_appropriate(type_v, color_v, amount_v, deadline_v)) {
+					fail_str.push_back(reading_file_buffer);
+				}
+				else {
+					add_plans(type_v, color_v, amount_v, deadline_v);
+				}
+			}
+		}
+		int f_str_size = fail_str.size();
+		if (f_str_size == 0) {
 			printf("テンプレートファイルから予定をすべて読み込みました。\n");
+		}
+		else {
+			printf("テンプレートファイルから予定を読み込みました。\n");
+			printf("フォーマットに合わない文が %d 行ありました。\n", f_str_size);
+			for (int i = 0; i < f_str_size; i++) {
+				std::cout << i + 1 << " : " << fail_str[i] << std::endl;
+			}
+			std::cout << std::endl;
+			printf("コマンド処理を終了します。\n");
 		}
 	}
 
-	
+	/*
+	* getlineで読み込んだ行から数値を配列要素として取り出す
+	*/
+	static std::vector<int> buffer_to_array(std::string buffer) {
+		std::vector<int> vec;
+		int N = buffer.size();
+		char c;
+		int tmp = 0;
+		for (int i = 0; i < N; i++) {
+			c = buffer[i];
+			if (c == ' ' || c == '　') {
+				vec.push_back(tmp);
+				tmp = 0;
+			}
+			else {
+				tmp *= 10;
+				tmp += (c - '0');
+			}
+		}
+		vec.push_back(tmp);
+		return vec;
+	}
+	/*
+	* vector内の数値が適切な値かを調べる
+	*/
+	static bool is_appropriate(int type_v, char color_v, int amount_v, char deadline_v) {
+		if (type_v < 0 || type_v > MAX_TYPE) return false;
+		if (color_v < 0 || color_v > MAX_COLOR) return false;
+		if (amount_v < 0) return false;
+		if (deadline_v < 0 || deadline_v > 31) return false;
+		return true;
+	}
 
 	/*
 	* "clear"コマンドの処理をする
