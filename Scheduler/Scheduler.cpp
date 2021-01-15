@@ -67,12 +67,19 @@ int main() {
 			UI::list_schedule();
 			continue;
 		}
+		// add
 		else if (com == "add") {
 			// 処理
 			UI::add_schedule();
 			continue;
 		}
-		// clear schedule
+		// delete
+		else if (com == "delete") {
+			// 処理
+			UI::delete_schedule();
+			continue;
+		}
+		// clear
 		else if (com == "clear") {
 			// 処理
 			UI::clear_schedule();
@@ -84,6 +91,7 @@ int main() {
 			UI::make_template();
 			continue;
 		}
+		// set
 		else if (com == "set") {
 			// 処理
 			UI::set_schedule();

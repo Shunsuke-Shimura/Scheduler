@@ -427,8 +427,8 @@ namespace UI {
 		std::cin.exceptions(std::ios::failbit); // cin の例外処理を有効化
 		while (true) {
 			try {
-				std::cout << "何番目の予定を削除しますか?（処理をキャンセルするには0を入力してください\n";
-				std::cout << std::endl;
+				std::cout << "何番目の予定を削除しますか?（処理をキャンセルするには0を入力してください）\n";
+				std::cout << ">>> ";
 				std::cin >> del_num;
 				if (del_num == 0) {
 					printf("コマンド処理をキャンセルしました。\n");
